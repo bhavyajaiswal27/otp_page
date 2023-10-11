@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-image: linear-gradient(rgb(255, 128, 0), #ffffff, green);
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 400px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        #otp-input {
+            display: flex;
+            justify-content: center;
+        }
+
+        .otp-box {
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            font-size: 18px;
+            margin: 0 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .timer {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        #resend-btn {
+            display: none;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>OTP Verification</h2>
+        <p id="otp-message">A 4-digit OTP has been sent to your mobile number.</p>
+        <div id="otp-input">
+            <input type="text" class="otp-box" maxlength="1">
+            <input type="text" class="otp-box" maxlength="1">
+            <input type="text" class="otp-box" maxlength="1">
+            <input type="text" class="otp-box" maxlength="1">
+        </div>
+        <p class="timer" id="timer">Time remaining: 30 seconds</p>
+        <button id="submit-btn">Submit</button>
+    </div>
+
+    <div id="resend-container">
+        <button id="resend-btn" disabled>Resend OTP</button>
+    </div>
+
+    <script>
+        // JavaScript code as provided in the previous response.
+        document.addEventListener("DOMContentLoaded", function () {
+            const otpBoxes = document.querySelectorAll('.otp-box');
+            const timerDisplay = document.getElementById('timer');
+            const resendBtn = document.getElementById('resend-btn');
+            const submitBtn = document.getElementById('submit-btn');
+            let timeRemaining = 30;
+            let timer;
+          
+            // Function to start the countdown timer
+            function startTimer() {
+              timer = setInterval(() => {
+                timeRemaining--;
+                timerDisplay.textContent = `Time remaining: ${timeRemaining} seconds`;
+          
+                if (timeRemaining === 0) {
+                  clearInterval(timer);
+                  timerDisplay.textContent = "Time's up!";
+                  resendBtn.removeAttribute('disabled');
+                  submitBtn.setAttribute('disabled', 'disabled');
+                }
+              }, 1000);
+            }
+          
+            // Enable Submit button and start the timer
+            startTimer();
+            submitBtn.addEventListener('click', () => {
+              // You can add your OTP verification logic here
+              alert('OTP Submitted!');
+            });
+          
+            // Resend OTP button click handler
+            resendBtn.addEventListener('click', () => {
+              timeRemaining = 30;
+              clearInterval(timer);
+              startTimer();
+              timerDisplay.textContent = `Time remaining: ${timeRemaining} seconds`;
+              resendBtn.setAttribute('disabled', 'disabled');
+              submitBtn.removeAttribute('disabled');
+              alert('New OTP sent!');
+            });
+          
+            // Auto-focus the first input field
+            otpBoxes[0].focus();
+          
+            // Move to the next input field when a digit is entered
+            otpBoxes.forEach((box, index) => {
+              box.addEventListener('input', (e) => {
+                const input = e.target;
+                if (input.value.length === 1) {
+                  if (index < otpBoxes.length - 1) {
+                    otpBoxes[index + 1].focus();
+                  } else {
+                    input.blur();
+                  }
+                }
+              });
+          
+              // Move to the previous input field when the Backspace key is pressed
+              box.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && index > 0 && otpBoxes[index].value.length === 0) {
+                  otpBoxes[index - 1].focus();
+                }
+              });
+            });
+          });
+          
+    </script>
+</body>
+</html>
